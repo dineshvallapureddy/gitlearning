@@ -7,7 +7,7 @@ from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import Kubernete
 DAG_NAME = 'test_pod_operator'
 args = {
     'owner': 'Airflow',
-    'start_date': days_ago(2),
+   
 }
 
 dag = DAG(
