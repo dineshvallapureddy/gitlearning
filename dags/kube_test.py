@@ -20,8 +20,8 @@ dag = DAG(
 )
 
 quay_k8s = KubernetesPodOperator(
-    namespace='default',
-    image='gcr.io/gcp-runtimes/ubuntu_18_0_4',
+    namespace='airflow',
+    image='kunal627/snowsql',
     #image_pull_secrets=[k8s.V1LocalObjectReference('testquay')],
     cmds=["bash", "-cx"],
     arguments=["echo", "10", "echo pwd"],
