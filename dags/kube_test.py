@@ -21,8 +21,8 @@ dag = DAG(
 
 quay_k8s = KubernetesPodOperator(
     namespace='default',
-    image='quay.io/apache/bash',
-    image_pull_secrets=[k8s.V1LocalObjectReference('testquay')],
+    image='gcr.io/gcp-runtimes/ubuntu_18_0_4',
+    #image_pull_secrets=[k8s.V1LocalObjectReference('testquay')],
     cmds=["bash", "-cx"],
     arguments=["echo", "10", "echo pwd"],
     labels={"foo": "bar"},
