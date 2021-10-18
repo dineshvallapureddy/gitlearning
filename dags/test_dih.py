@@ -39,7 +39,7 @@ default_args = {
     #'email_on_retry': dset["email_on_retry"],
     #'concurrency' : dset["concurrency"],
     #'retries': dset["retries"],
-    'retry_delay': timedelta(minutes=dset["retry_delay"])
+    #'retry_delay': timedelta(minutes=dset["retry_delay"])
 }
 
 group =[]
