@@ -44,6 +44,8 @@ default_args = {
 
 group =[]
 
+DAG_NAME=snowexp
+
 with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedule_interval"], dagrun_timeout=timedelta(minutes=dset["dagrun_timeout"])) as dag:
 
     dag.doc_md = __doc__  # providing that you have a docstring at the beggining of the DAG
