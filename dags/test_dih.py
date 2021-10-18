@@ -73,7 +73,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
             stagetaskgrp = []
             with TaskGroup(group_id="{}_S2HS".format(stagegrp)) as run_stage1:
 
-                for landtab in snowsqljobs[stagegrp]["landtab"]:
+                for landtab in snowsqljobs[stagegrp]["dev_cdh_db"]:
 
                     dbname, tabname = landtab.split('.')
                     command="snowsql -a mdtplcprod.us-east-1 -u DEV_HILLTOPPERS_BI_SVC -d DEV_CDH_DB -s XDS_MAIN -w DEV_HILLTOPPERS_ANALYTICS_WH --private-key-path snowflake.pk -q  'select * from {};'".format(tabname)
