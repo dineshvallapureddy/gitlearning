@@ -32,7 +32,7 @@ image = kubeparams["image"]
 # set the default config for the dag
 default_args = {
     'owner': dset["owner"],
-    'depends_on_past': dset["depends_on_past"],
+    #'depends_on_past': dset["depends_on_past"],
     'start_date': datetime.utcnow(),
     'email': dset["email"],
     'email_on_failure': dset["email_on_failure"],
