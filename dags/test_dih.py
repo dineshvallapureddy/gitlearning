@@ -76,11 +76,10 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                 for landtab in snowsqljobs[stagegrp]["landtab"]:
 
                     dbname, tabname = landtab.split('.')
-		            command="snowsql -a mdtplcprod.us-east-1 -u DEV_HILLTOPPERS_BI_SVC -d DEV_CDH_DB -s XDS_MAIN -w DEV_HILLTOPPERS_ANALYTICS_WH --private-key-path snowflake.pk -q  'select * from {};'".format(tabname)
+		    command="snowsql -a mdtplcprod.us-east-1 -u DEV_HILLTOPPERS_BI_SVC -d DEV_CDH_DB -s XDS_MAIN -w DEV_HILLTOPPERS_ANALYTICS_WH --private-key-path snowflake.pk -q  'select * from {};'".format(tabname)
                     taskname = "SF_{}_{}".format(dbname, tabname)
                     taskid = 'TA_' + taskname
                     #commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,
                     #    kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {}".format(command, tabname, dbname))
                     ssh_dih = getpodoperator(namespace, image, command, labels, taskname , taskid)
-					
-					ssh_dih
+                    ssh_dih
