@@ -46,7 +46,7 @@ group =[]
 
 #command="snowsql -a mdtplcprod.us-east-1 -u DEV_HILLTOPPERS_BI_SVC -d DEV_CDH_DB -s XDS_MAIN -w DEV_HILLTOPPERS_ANALYTICS_WH --private-key-path snowflake.pk -q  'select * from XDS_H_CONTACT;'"
 
-DAG_NAME=test_snowexp
+#DAG_NAME=test_snowexp
 
 with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedule_interval"], dagrun_timeout=timedelta(minutes=dset["dagrun_timeout"])) as dag:
 
