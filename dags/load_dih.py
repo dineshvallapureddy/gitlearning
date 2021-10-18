@@ -44,7 +44,7 @@ default_args = {
 
 group =[]
 
-DAG_NAME=snowexp
+#DAG_NAME=snowexp
 
 with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedule_interval"], dagrun_timeout=timedelta(minutes=dset["dagrun_timeout"])) as dag:
 
