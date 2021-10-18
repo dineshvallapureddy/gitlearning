@@ -12,7 +12,7 @@ from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOpera
 #from src.main.python.airflowhelper import getBatchId
 import re
 import paramiko
-import gssapi
+#import gssapi
 
 ##############################################################################################
 ## Set Airflow default variables
