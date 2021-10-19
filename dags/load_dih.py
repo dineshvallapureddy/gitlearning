@@ -85,7 +85,10 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     # taskid = 'TA_' + taskname
                     # commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {}".format(scriptpaths["baseval"], dbname, tabname, srctoland[dbname], 'true'))
                     # ssh_valid = getpodoperator(namespace, image, commands, labels, taskname, taskid)
-					
+                    taskname = "DISTCP_{}_{}".format(schemaname, tabname)
+                    taskid = 'TA_' + taskname
+                    commands = "{} && echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(expo,password,kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -t {}".format(scriptpaths["distcp"], tabname))
+                    ssh_distcp = getpodoperator(namespace, image, commands, labels, taskname , taskid)					
 
                     # taskname = "CP_{}_{}".format(dbname, tabname)
                     # taskid = 'TA_' + taskname
@@ -104,7 +107,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
 
                     # ssh_dih >> ssh_valid >> ssh_distcp >> ssh_stage >> ssh_cleanup
                     # stagetaskgrp.append(run_stage1)
-                    ssh_dih
+                    ssh_dih >> ssh_distcp
 
             # depstagetaskgrp = []
             # with TaskGroup(group_id="{}_depstagetab".format(stagegrp)) as run_depstage:
