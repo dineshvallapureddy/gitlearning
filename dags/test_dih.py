@@ -78,7 +78,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     schemaname, tabname = landtab.split('.')
                     
                     #command="{} ; snowsql -a mdtplcprod.us-east-1 -u DEV_HILLTOPPERS_BI_SVC -d DEV_CDH_DB -s XDS_MAIN -w DEV_HILLTOPPERS_ANALYTICS_WH --private-key-path snowflake.pk -q  'select count(*) from {};'".format(expo,tabname)
-                    taskname = "SF_{}_{}".format(dbname, tabname)
+                    taskname = "SF_{}_{}".format(schemaname, tabname)
                     taskid = 'TA_' + taskname
                     commands = "{} && echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(expo,password,kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -d {} -s {} -t {}".format(scriptpaths["snowexp"],snowsqljobs[stagegrp],schemaname,tabname))
 
