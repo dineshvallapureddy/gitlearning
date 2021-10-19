@@ -83,4 +83,10 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     commands = "{} && echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(expo,password,kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -d {} -s {} -t {}".format(scriptpaths["snowexp"],"dev_cdh_db",schemaname,tabname))
 
                     ssh_dih = getpodoperator(namespace, image, commands, labels, taskname , taskid)
-                    ssh_dih
+                    
+                    taskname = "DISTCP_{}_{}".format(schemaname, tabname)
+                    taskid = 'TA_' + taskname
+                    commands = "{} && echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(expo,password,kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -t {}".format(scriptpaths["distcp"], tabname))
+                    ssh_distcp = getpodoperator(namespace, image, commands, labels, taskname , taskid)
+                    
+                    ssh_dih >> ssh_distcp
