@@ -87,23 +87,24 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     # ssh_valid = getpodoperator(namespace, image, commands, labels, taskname, taskid)
 					
 
-                    taskname = "CP_{}_{}".format(dbname, tabname)
-                    taskid = 'TA_' + taskname
-                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["distcp"], tabname , batchid,  'dml', land2stg[dbname], 'stage'))
-                    ssh_distcp = getpodoperator(namespace, image, commands, labels, taskname, taskid)
+                    # taskname = "CP_{}_{}".format(dbname, tabname)
+                    # taskid = 'TA_' + taskname
+                    # commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["distcp"], tabname , batchid,  'dml', land2stg[dbname], 'stage'))
+                    # ssh_distcp = getpodoperator(namespace, image, commands, labels, taskname, taskid)
 
-                    taskname = "STG_{}_{}".format(dbname, tabname)
-                    taskid = 'TA_' + taskname
-                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', land2stg[dbname], 'stage'))
-                    ssh_stage = getpodoperator(namespace, image, commands, labels, taskname, taskid)
+                    # taskname = "STG_{}_{}".format(dbname, tabname)
+                    # taskid = 'TA_' + taskname
+                    # commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', land2stg[dbname], 'stage'))
+                    # ssh_stage = getpodoperator(namespace, image, commands, labels, taskname, taskid)
                     
-                    taskname = "clean_{}_{}".format(dbname, tabname)
-                    taskid = 'TA_' + taskname
-                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', land2stg[dbname], 'stage'))
-                    ssh_cleanup = getpodoperator(namespace, image, commands, labels, taskname, taskid)                    
+                    # taskname = "clean_{}_{}".format(dbname, tabname)
+                    # taskid = 'TA_' + taskname
+                    # commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', land2stg[dbname], 'stage'))
+                    # ssh_cleanup = getpodoperator(namespace, image, commands, labels, taskname, taskid)                    
 
-                    ssh_dih >> ssh_valid >> ssh_distcp >> ssh_stage >> ssh_cleanup
-                    stagetaskgrp.append(run_stage1)
+                    # ssh_dih >> ssh_valid >> ssh_distcp >> ssh_stage >> ssh_cleanup
+                    # stagetaskgrp.append(run_stage1)
+                    ssh_dih
 
             # depstagetaskgrp = []
             # with TaskGroup(group_id="{}_depstagetab".format(stagegrp)) as run_depstage:
