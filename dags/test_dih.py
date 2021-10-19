@@ -82,5 +82,5 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     taskid = 'TA_' + taskname
                     commands = "{} && echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(expo,password,kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {}".format(scriptpaths["snowexp"], tabname, dbname))
 
-                    ssh_dih = getpodoperator(namespace, image, command, labels, taskname , taskid)
+                    ssh_dih = getpodoperator(namespace, image, commands, labels, taskname , taskid)
                     ssh_dih
