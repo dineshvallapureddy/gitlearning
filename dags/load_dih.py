@@ -8,7 +8,7 @@ import base64
 from airflow.utils.task_group import TaskGroup
 
 # Fetch config variables from Airflow
-dset = Variable.get("loaddihtables", deserialize_json=True)
+dset = Variable.get("snowflakedih", deserialize_json=True)
 
 dihdict = dset["snowflake_dih_mapping"]
 snowsqljobs = dihdict["jobs"]
@@ -25,7 +25,7 @@ kinitdomain = kinitparms["kinitdomain"]
 edgenodehost = kinitparms["edgenodehost"]
 
 kubeparams = Variable.get("kubeparams", deserialize_json=True)
-labels={"job": "loaddihtables"}
+labels={"job": "snowflakedih"}
 namespace = kubeparams["namespace"]
 image = kubeparams["image"]
 
