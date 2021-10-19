@@ -71,7 +71,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
             stagetaskgrp = []
             with TaskGroup(group_id="{}_S2HS".format(stagegrp)) as run_stage1:
 
-                for landtab in snowsqljobs[stagegrp]["landtab"]:
+                for landtab in snowsqljobs[stagegrp]["table"]:
 
                     dbname, tabname = landtab.split('.')
 
