@@ -81,10 +81,10 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                         kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {}".format(scriptpaths["snowexp"], tabname, dbname))
                     ssh_dih = getpodoperator(namespace, image, commands, labels, taskname , taskid)
 
-                    taskname = "VAL_{}_{}".format(dbname, tabname)
-                    taskid = 'TA_' + taskname
-                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {}".format(scriptpaths["baseval"], dbname, tabname, srctoland[dbname], 'true'))
-                    ssh_valid = getpodoperator(namespace, image, commands, labels, taskname, taskid)
+                    # taskname = "VAL_{}_{}".format(dbname, tabname)
+                    # taskid = 'TA_' + taskname
+                    # commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {}".format(scriptpaths["baseval"], dbname, tabname, srctoland[dbname], 'true'))
+                    # ssh_valid = getpodoperator(namespace, image, commands, labels, taskname, taskid)
 					
 
                     taskname = "CP_{}_{}".format(dbname, tabname)
