@@ -11,7 +11,7 @@ from airflow.plugins_manager import AirflowPlugin
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 #from src.main.python.airflowhelper import getBatchId
 import re
-import paramiko
+#import paramiko
 #import gssapi
 
 ##############################################################################################
