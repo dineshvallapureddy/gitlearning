@@ -96,7 +96,11 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -t {} -d {} ".format(scriptpaths["cleanup"], tabname , 'dih'))
                     ssh_cleanup = getpodoperator(namespace, image, commands, labels, taskname, taskid)
                     
-                    ssh_dih >> ssh_distcp >> ssh_stage >> ssh_cleanup
+                    taskname = "CLR_S3_{}_{}".format("dev_cdh_db", tabname)
+                    taskid = 'TA_' + taskname
+                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -t {} -d {} ".format(scriptpaths["cleanup"], tabname , 'dih'))
+                    ssh_cleanup_s3 = getpodoperator(namespace, image, commands, labels, taskname, taskid)
+                    ssh_dih >> ssh_distcp >> ssh_stage >> ssh_cleanup >> ssh_cleanup_s3
         group.append(run_stage0)
     dummyop1 = DummyOperator(task_id='DIHLODCMP')
 setbatch >> group >> dummyop1
