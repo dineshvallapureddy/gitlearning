@@ -44,9 +44,6 @@ default_args = {
 
 group =[]
 
-#command="snowsql -a mdtplcprod.us-east-1 -u DEV_HILLTOPPERS_BI_SVC -d DEV_CDH_DB -s XDS_MAIN -w DEV_HILLTOPPERS_ANALYTICS_WH --private-key-path snowflake.pk -q  'select * from XDS_H_CONTACT;'"
-expo="export SNOWSQL_PRIVATE_KEY_PASSPHRASE=arGY97cCxjVX5FE5"
-#DAG_NAME=test_snowexp
 
 with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedule_interval"], dagrun_timeout=timedelta(minutes=dset["dagrun_timeout"])) as dag:
 
@@ -94,4 +91,12 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', land2stg["dih"], 'stage'))
                     ssh_stage = getpodoperator(namespace, image, commands, labels, taskname, taskid)
                     
-                    ssh_dih >> ssh_distcp >> ssh_stage
+                    taskname = "CLR_{}_{}".format("dev_cdh_db", tabname)
+                    taskid = 'TA_' + taskname
+                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["cleanup"], tabname , 'dih'))
+                    ssh_cleanup = getpodoperator(namespace, image, commands, labels, taskname, taskid)
+                    
+                    ssh_dih >> ssh_distcp >> ssh_stage >> ssh_cleanup
+        group.append(run_stage0)
+    dummyop1 = DummyOperator(task_id='DIHLODCMP')
+setbatch >> group >> dummyop1
