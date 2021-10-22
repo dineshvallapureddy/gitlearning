@@ -125,13 +125,13 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
             facttaskgrp  = []
             with TaskGroup(group_id="{}_FactLoad".format(stagegrp)) as run_fact:
 
-                for facttab in snowsqljobs[stagegrp]["facttabs"]:
+                for table in snowsqljobs[stagegrp]["facttabs"]:
 
-                    dbname, tabname = facttab.split('.')
-                    taskname = "FCT_{}".format(tabname)
+                    
+                    taskname = "FCT_{}".format(table)
                     taskid = 'TA_' + taskname
                     commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,
-                        kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'fact'))
+                        kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], table , batchid,  'dml', factdb, 'fact'))
                     ssh_fact = getpodoperator(namespace, image, commands, labels, taskname, taskid)
                     facttaskgrp.append(run_fact)
 
