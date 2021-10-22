@@ -122,18 +122,18 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     # filterruletaskgrp.append(run_filterrule)
 
 
-            # facttaskgrp  = []
-            # with TaskGroup(group_id="{}_FactLoad".format(stagegrp)) as run_fact:
+            facttaskgrp  = []
+            with TaskGroup(group_id="{}_FactLoad".format(stagegrp)) as run_fact:
 
-                # for facttab in sqoopjobs[stagegrp]["facttabs"]:
+                for facttab in sqoopjobs[stagegrp]["facttabs"]:
 
-                    # dbname, tabname = facttab.split('.')
-                    # taskname = "FCT_{}".format(tabname)
-                    # taskid = 'TA_' + taskname
-                    # commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,
-                        # kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'fact'))
-                    # ssh_fact = getpodoperator(namespace, image, commands, labels, taskname, taskid)
-                    # facttaskgrp.append(run_fact)
+                    dbname, tabname = facttab.split('.')
+                    taskname = "FCT_{}".format(tabname)
+                    taskid = 'TA_' + taskname
+                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,
+                        kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'fact'))
+                    ssh_fact = getpodoperator(namespace, image, commands, labels, taskname, taskid)
+                    facttaskgrp.append(run_fact)
 
 
             # depfacttaskgrp  = []
@@ -148,7 +148,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                         # kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'fact'))
                     # ssh_depfact = getpodoperator(namespace, image, commands, labels, taskname, taskid)
                     # depfacttaskgrp.append(run_depfact)
-            run_stage1 >> run_depstage #>> run_filterrule >> run_fact >> run_depfact
+            run_stage1 >> run_depstage >> run_fact #>> run_filterrule >> run_fact >> run_depfact
         group.append(run_stage0)
     dummyop1 = DummyOperator(task_id='DIHLODCMP')
 setbatch >> group >> dummyop1
