@@ -100,7 +100,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     ssh_dih >> ssh_distcp >> ssh_stage >> ssh_cleanup
             depstagetaskgrp = []
             with TaskGroup(group_id="{}_depstagetab".format(stagegrp)) as run_depstage:
-                for stagedeptab in sqoopjobs[stagegrp]["depstage"]:
+                for stagedeptab in snowsqljobs[stagegrp]["depstage"]:
                     dbname, tabname = stagedeptab.split('.')
                     taskname = "DEPSTG_{}_{}".format(dbname, tabname)
                     taskid = 'TA_' + taskname
