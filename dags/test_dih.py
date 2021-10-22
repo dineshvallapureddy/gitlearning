@@ -106,8 +106,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     taskid = 'TA_' + taskname
                     commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'stage'))
                     ssh_stage = getpodoperator(namespace, image, commands, labels, taskname, taskid)
-                    ssh_stage
-                    #depstagetaskgrp.append(run_depstage)
+                    depstagetaskgrp.append(run_depstage)
             # filterruletaskgrp = []
             # with TaskGroup(group_id="{}_Filterrule".format(stagegrp)) as run_filterrule:
 
@@ -149,7 +148,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                         # kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'fact'))
                     # ssh_depfact = getpodoperator(namespace, image, commands, labels, taskname, taskid)
                     # depfacttaskgrp.append(run_depfact)
-            #run_stage1 >> run_depstage >> run_filterrule >> run_fact >> run_depfact
+            run_stage1 >> run_depstage #>> run_filterrule >> run_fact >> run_depfact
         group.append(run_stage0)
     dummyop1 = DummyOperator(task_id='DIHLODCMP')
 setbatch >> group >> dummyop1
