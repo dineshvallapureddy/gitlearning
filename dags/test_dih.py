@@ -110,7 +110,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
             # filterruletaskgrp = []
             # with TaskGroup(group_id="{}_Filterrule".format(stagegrp)) as run_filterrule:
 
-                # for filtertab in sqoopjobs[stagegrp]["filterrule"]:
+                # for filtertab in snowsqljobs[stagegrp]["filterrule"]:
 
                     # dbname, tabname = filtertab.split('.')
 
@@ -125,7 +125,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
             facttaskgrp  = []
             with TaskGroup(group_id="{}_FactLoad".format(stagegrp)) as run_fact:
 
-                for facttab in sqoopjobs[stagegrp]["facttabs"]:
+                for facttab in snowsqljobs[stagegrp]["facttabs"]:
 
                     dbname, tabname = facttab.split('.')
                     taskname = "FCT_{}".format(tabname)
@@ -139,7 +139,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
             # depfacttaskgrp  = []
             # with TaskGroup(group_id="{}_DepFactLoad".format(stagegrp)) as run_depfact:
 
-                # for depfact in sqoopjobs[stagegrp]["depfact"]:
+                # for depfact in snowsqljobs[stagegrp]["depfact"]:
 
                     # dbname, tabname = depfact.split('.')
                     # taskname = "DEPFCT_{}".format(tabname)
