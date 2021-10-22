@@ -96,11 +96,59 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -t {} -d {} ".format(scriptpaths["cleanup"], tabname , 'dih'))
                     ssh_cleanup = getpodoperator(namespace, image, commands, labels, taskname, taskid)
                     
-                    taskname = "CLR_S3_{}_{}".format("dev_cdh_db", tabname)
-                    taskid = 'TA_' + taskname
-                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -t {} -d {} ".format(scriptpaths["cleanup_s3"], tabname , 'dih'))
-                    ssh_cleanup_s3 = getpodoperator(namespace, image, commands, labels, taskname, taskid)
-                    ssh_dih >> ssh_distcp >> ssh_stage >> ssh_cleanup >> ssh_cleanup_s3
+            
+                    ssh_dih >> ssh_distcp >> ssh_stage >> ssh_cleanup
+            # depstagetaskgrp = []
+            # with TaskGroup(group_id="{}_depstagetab".format(stagegrp)) as run_depstage:
+                # for stagedeptab in sqoopjobs[stagegrp]["depstage"]:
+                    # dbname, tabname = stagedeptab.split('.')
+                    # taskname = "DEPSTG_{}_{}".format(dbname, tabname)
+                    # taskid = 'TA_' + taskname
+                    # commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'stage'))
+                    # ssh_stage = getpodoperator(namespace, image, commands, labels, taskname, taskid)
+                    # depstagetaskgrp.append(run_depstage)
+            # filterruletaskgrp = []
+            # with TaskGroup(group_id="{}_Filterrule".format(stagegrp)) as run_filterrule:
+
+                # for filtertab in sqoopjobs[stagegrp]["filterrule"]:
+
+                    # dbname, tabname = filtertab.split('.')
+
+                    # taskname = "FRL_{}_{}".format(dbname, tabname)
+                    # taskid = 'TA_' + taskname
+                    # commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,
+                        # kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'stage'))
+                    # ssh_frule = getpodoperator(namespace, image, commands, labels, taskname, taskid)
+                    # filterruletaskgrp.append(run_filterrule)
+
+
+            # facttaskgrp  = []
+            # with TaskGroup(group_id="{}_FactLoad".format(stagegrp)) as run_fact:
+
+                # for facttab in sqoopjobs[stagegrp]["facttabs"]:
+
+                    # dbname, tabname = facttab.split('.')
+                    # taskname = "FCT_{}".format(tabname)
+                    # taskid = 'TA_' + taskname
+                    # commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,
+                        # kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'fact'))
+                    # ssh_fact = getpodoperator(namespace, image, commands, labels, taskname, taskid)
+                    # facttaskgrp.append(run_fact)
+
+
+            # depfacttaskgrp  = []
+            # with TaskGroup(group_id="{}_DepFactLoad".format(stagegrp)) as run_depfact:
+
+                # for depfact in sqoopjobs[stagegrp]["depfact"]:
+
+                    # dbname, tabname = depfact.split('.')
+                    # taskname = "DEPFCT_{}".format(tabname)
+                    # taskid = 'TA_'  + taskname
+                    # commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,
+                        # kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'fact'))
+                    # ssh_depfact = getpodoperator(namespace, image, commands, labels, taskname, taskid)
+                    # depfacttaskgrp.append(run_depfact)
+            #run_stage1 >> run_depstage >> run_filterrule >> run_fact >> run_depfact
         group.append(run_stage0)
     dummyop1 = DummyOperator(task_id='DIHLODCMP')
 setbatch >> group >> dummyop1
