@@ -98,15 +98,16 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     
             
                     ssh_dih >> ssh_distcp >> ssh_stage >> ssh_cleanup
-            # depstagetaskgrp = []
-            # with TaskGroup(group_id="{}_depstagetab".format(stagegrp)) as run_depstage:
-                # for stagedeptab in sqoopjobs[stagegrp]["depstage"]:
-                    # dbname, tabname = stagedeptab.split('.')
-                    # taskname = "DEPSTG_{}_{}".format(dbname, tabname)
-                    # taskid = 'TA_' + taskname
-                    # commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'stage'))
-                    # ssh_stage = getpodoperator(namespace, image, commands, labels, taskname, taskid)
-                    # depstagetaskgrp.append(run_depstage)
+            depstagetaskgrp = []
+            with TaskGroup(group_id="{}_depstagetab".format(stagegrp)) as run_depstage:
+                for stagedeptab in sqoopjobs[stagegrp]["depstage"]:
+                    dbname, tabname = stagedeptab.split('.')
+                    taskname = "DEPSTG_{}_{}".format(dbname, tabname)
+                    taskid = 'TA_' + taskname
+                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'stage'))
+                    ssh_stage = getpodoperator(namespace, image, commands, labels, taskname, taskid)
+                    ssh_stage
+                    #depstagetaskgrp.append(run_depstage)
             # filterruletaskgrp = []
             # with TaskGroup(group_id="{}_Filterrule".format(stagegrp)) as run_filterrule:
 
