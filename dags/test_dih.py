@@ -86,14 +86,14 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -t {}".format(scriptpaths["distcp"], tabname))
                     ssh_distcp = getpodoperator(namespace, image, commands, labels, taskname , taskid)
                     
-                    taskname = "STG_{}_{}".format("dev_cdh_db", tabname)
+                    taskname = "STG_{}_{}".format(schemaname, tabname)
                     taskid = 'TA_' + taskname
                     commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', land2stg["dih"], 'stage'))
                     ssh_stage = getpodoperator(namespace, image, commands, labels, taskname, taskid)
                     
-                    taskname = "CLR_{}_{}".format("dev_cdh_db", tabname)
+                    taskname = "CLR_{}_{}".format(schemaname, tabname)
                     taskid = 'TA_' + taskname
-                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -t {} -d {} ".format(scriptpaths["cleanup"], tabname , 'dih'))
+                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -t {} -d {} ".format(scriptpaths["cleanup"], tabname , srctoland[schemaname]))
                     ssh_cleanup = getpodoperator(namespace, image, commands, labels, taskname, taskid)
                     
             
