@@ -93,7 +93,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=dset["schedu
                     
                     taskname = "CLR_{}_{}".format(schemaname, tabname)
                     taskid = 'TA_' + taskname
-                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -t {} -d {} ".format(scriptpaths["cleanup"], tabname , srctoland[schemaname]))
+                    commands = "echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} -t {} -d {} ".format(scriptpaths["cleanup"], tabname , srctoland[dbname]))
                     ssh_cleanup = getpodoperator(namespace, image, commands, labels, taskname, taskid)
                     
             
