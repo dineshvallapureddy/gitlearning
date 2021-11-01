@@ -48,7 +48,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=None, dagrun
 
     batchid = "{{ ti.xcom_pull(key='batchId', task_ids='Run_BatchId') }}"
     # get the Kinit task
-    command = 'echo {} | kinit {}'.format(password, kinitprincipal@kinitdomain) 
+    command = 'echo {} | kinit {}@{}'.format(password, kinitprincipal,kinitdomain) 
     bash_kinit = getbashoperator("KinitEdge", False, command)
 
     # Task Group for Sqoop, validation and stage table load
