@@ -68,15 +68,15 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=None, dagrun
                     dbname, tabname = landtab.split('.')
 
                     command="echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,
-                        kinitprincipal, kinitdomain, edgenodehost, "{} {} {}".format(scriptpaths["sqoop"], tabname, dbname))
+                        kinitprincipal, kinitdomain,kinitprincipal, edgenodehost, "{} {} {}".format(scriptpaths["sqoop"], tabname, dbname))
                     taskname = "sqoop_{}_{}".format(dbname, tabname)
                     ssh_sqoop = getbashoperator(taskname, False, command)
 					
-                    command="echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,  kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {}".format(scriptpaths["baseval"], dbname, tabname, srctoland[dbname], 'true'))
+                    command="echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {}".format(scriptpaths["baseval"], dbname, tabname, srctoland[dbname], 'true'))
                     taskname = "validation_{}_{}".format(dbname, tabname)
                     ssh_valid = getbashoperator(taskname, False, command)
 					
-                    command="echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,  kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', land2stg[dbname], 'stage'))
+                    command="echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password, kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', land2stg[dbname], 'stage'))
                     taskname = "load_stage_{}_{}".format(dbname, tabname)
                     ssh_stage = getbashoperator(taskname, False, command)
 
@@ -90,7 +90,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=None, dagrun
 
                     dbname, tabname = stagedeptab.split('.')
                     command="echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,
-                        kinitprincipal, kinitdomain,  edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'stage'))
+                        kinitprincipal, kinitdomain, kinitprincipal, edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'stage'))
                     taskname = "load_depstage_{}_{}".format(dbname, tabname)
                     ssh_fact = getbashoperator(taskname, False, command)
                     depstagetaskgrp.append(run_depstage)
@@ -102,7 +102,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=None, dagrun
 
                     dbname, tabname = filtertab.split('.')
                     command="echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,
-                        kinitprincipal, kinitdomain,  edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'stage'))
+                        kinitprincipal, kinitdomain,  kinitprincipal,edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'stage'))
                     taskname = "load_filter_{}".format(tabname)
                     ssh_fact = getbashoperator(taskname, False, command)
                     filterruletaskgrp.append(run_filterrule)
@@ -114,7 +114,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=None, dagrun
                 for table in sqoopjobs[stagegrp]["facttabs"]:
 
                     command="echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,
-                        kinitprincipal, kinitdomain,  edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'fact'))
+                        kinitprincipal, kinitdomain,kinitprincipal,  edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'fact'))
                     taskname = "{}".format(table)
                     ssh_fact = getbashoperator(taskname, False, command)
                     facttaskgrp.append(run_fact)
@@ -126,7 +126,7 @@ with DAG(dset["name"], default_args=default_args, schedule_interval=None, dagrun
                 for table in sqoopjobs[stagegrp]["depfact"]:
 
                     command="echo {} | kinit {}@{} && ssh -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes {}@{} '{}'".format(password,
-                        kinitprincipal, kinitdomain,  edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'fact'))
+                        kinitprincipal, kinitdomain,kinitprincipal,  edgenodehost, "{} {} {} {} {} {}".format(scriptpaths["hiveload"], tabname , batchid,  'dml', dbname, 'fact'))
                     taskname = "{}".format(table)
                     ssh_fact = getbashoperator(taskname, False, command)
                     depfacttaskgrp.append(run_depfact)
