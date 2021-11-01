@@ -30,7 +30,9 @@ factdb = crpmdevicedict["factdb"]
 srctoland = crpmdevicedict["src2land"]
 land2stg = crpmdevicedict["land2stg"]
 scriptpaths = dset["scriptpaths"]
-
+kinitprincipal = kinitparms["kinitprincipal"]
+kinitdomain = kinitparms["kinitdomain"]
+edgenodehost = kinitparms["edgenodehost"]
 
 default_args = {
     'owner': dset['owner'],
