@@ -11,8 +11,7 @@ from airflow.plugins_manager import AirflowPlugin
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 #from src.main.python.airflowhelper import getBatchId
 import re
-#import paramiko
-#import gssapi
+
 
 ##############################################################################################
 ## Set Airflow default variables
@@ -85,7 +84,7 @@ class CustomSSHHook(SSHHook):
                            port=self.port,
                            sock=self.host_proxy)
         else:
-            print("IAM HERE!!", self.remote_host,self.username )
+
             client.connect(hostname=self.remote_host,
                            username=self.username,
                            key_filename=None,
@@ -115,11 +114,6 @@ class CustomSshPlugin(AirflowPlugin):
 
 
 
-def getedgenodehook():
-    return CustomSSHHook(ssh_conn_id="sharedsvcdev3-edge",
-            remote_host=edgenodehost,
-            port=22,
-            timeout=100)
 
 #############################################################################################
 # Get the Batch ID from DAG run - Batch Id is a timestamp without any separators. Batch Id is 
